@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { Dialog, DialogContent, DialogHeader, DialogTitle } from "../components/ui/dialog";
+import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription } from "../components/ui/dialog";
 import { Button } from "../components/ui/button";
 import { Textarea } from "../components/ui/textarea";
 import { MessageCircle, Mail, Send } from "lucide-react";
@@ -56,6 +56,7 @@ export default function SendNudgeModal({ open, onOpenChange, transaction, channe
             <Icon size={16} /> {channel === "email" ? "Send Email" : "Send WhatsApp"}
             <span className="ml-auto text-xs font-normal text-[#888]">to {transaction?.borrower_name}</span>
           </DialogTitle>
+          <DialogDescription className="text-xs text-[#666]">Edit the message before sending. Each send escalates to the next level.</DialogDescription>
         </DialogHeader>
 
         {/* Level progress */}

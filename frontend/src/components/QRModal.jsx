@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { Dialog, DialogContent, DialogHeader, DialogTitle } from "../components/ui/dialog";
+import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription } from "../components/ui/dialog";
 import { Button } from "../components/ui/button";
 import { Download, Copy, Check } from "lucide-react";
 import api from "../api";
@@ -39,6 +39,7 @@ export default function QRModal({ open, onOpenChange, transactionId }) {
           <DialogTitle className="text-base font-semibold">
             {data ? `${data.borrower_name} · ₹${Number(data.amount).toLocaleString("en-IN")}` : "Loading…"}
           </DialogTitle>
+          <DialogDescription className="text-xs text-[#666]">UPI payment QR code — scan with any UPI app to pay.</DialogDescription>
         </DialogHeader>
         <div className="flex flex-col items-center pt-2">
           {data?.qr_base64 ? (

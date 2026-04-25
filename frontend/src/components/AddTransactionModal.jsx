@@ -1,10 +1,14 @@
 import React, { useState } from "react";
-import { Dialog, DialogContent, DialogHeader, DialogTitle } from "../components/ui/dialog";
+import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription } from "../components/ui/dialog";
 import { Button } from "../components/ui/button";
 import { Input } from "../components/ui/input";
 import { Label } from "../components/ui/label";
 import { Textarea } from "../components/ui/textarea";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "../components/ui/select";
+import { Popover, PopoverTrigger, PopoverContent } from "../components/ui/popover";
+import { Calendar } from "../components/ui/calendar";
+import { CalendarIcon } from "lucide-react";
+import { format } from "date-fns";
 import api from "../api";
 import { toast } from "sonner";
 
@@ -45,7 +49,7 @@ export default function AddTransactionModal({ open, onOpenChange, onCreated }) {
       <DialogContent className="max-w-md bg-[#111] border-[#222] text-white" data-testid="add-transaction-modal">
         <DialogHeader>
           <DialogTitle className="text-lg font-bold">New transaction</DialogTitle>
-          <div className="text-xs text-[#888]">Track who owes you and when it's due.</div>
+          <DialogDescription className="text-xs text-[#888]">Track who owes you and when it's due.</DialogDescription>
         </DialogHeader>
         <div className="space-y-3 pt-2">
           <div>
@@ -69,7 +73,25 @@ export default function AddTransactionModal({ open, onOpenChange, onCreated }) {
           <div className="grid grid-cols-2 gap-3">
             <div>
               <Label className="text-xs text-[#888]">Due date</Label>
-              <Input type="date" value={form.due_date} onChange={(e)=>set("due_date", e.target.value)} className="bg-[#0a0a0a] border-[#222] text-white mt-1" data-testid="input-due-date"/>
+              <Popover>
+                <PopoverTrigger asChild>
+                  <button type="button" data-testid="input-due-date"
+                    className="w-full mt-1 h-10 px-3 rounded-md bg-[#0a0a0a] border border-[#222] text-white text-sm flex items-center justify-between hover:bg-[#0f0f0f]">
+                    <span className={form.due_date ? "text-white" : "text-[#666]"}>
+                      {form.due_date ? format(new Date(form.due_date), "PPP") : "Pick a date"}
+                    </span>
+                    <CalendarIcon size={14} className="text-[#666]"/>
+                  </button>
+                </PopoverTrigger>
+                <PopoverContent className="bg-[#111] border-[#222] text-white p-0" align="start">
+                  <Calendar
+                    mode="single"
+                    selected={form.due_date ? new Date(form.due_date) : undefined}
+                    onSelect={(d) => d && set("due_date", format(d, "yyyy-MM-dd"))}
+                    initialFocus
+                  />
+                </PopoverContent>
+              </Popover>
             </div>
             <div>
               <Label className="text-xs text-[#888]">Category</Label>

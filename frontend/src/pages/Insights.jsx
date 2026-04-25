@@ -55,7 +55,7 @@ export default function Insights() {
           </div>
           {s?.category_split?.length ? (
             <div className="mt-3 grid grid-cols-1 sm:grid-cols-[1fr_220px] gap-4 items-center">
-              <div style={{ width: "100%", height: 220 }}>
+              <div style={{ width: "100%", height: 220, minHeight: 220 }}>
                 <ResponsiveContainer>
                   <PieChart>
                     <Pie data={s.category_split} dataKey="value" nameKey="name" innerRadius={56} outerRadius={92} paddingAngle={3}>
@@ -83,19 +83,23 @@ export default function Insights() {
 
       <div className="card p-6" data-testid="monthly-trend-card">
         <div className="text-[11px] uppercase tracking-[0.2em] text-[#666] font-semibold">Monthly trend (last 6 months)</div>
-        <div className="mt-3" style={{ width: "100%", height: 280 }}>
-          <ResponsiveContainer>
-            <BarChart data={s?.monthly_trend || []}>
-              <CartesianGrid stroke="#1a1a1a" strokeDasharray="3 3" vertical={false}/>
-              <XAxis dataKey="month" stroke="#666" tickLine={false} axisLine={false}/>
-              <YAxis stroke="#666" tickLine={false} axisLine={false} tickFormatter={(v) => v >= 1000 ? `${v/1000}k` : v}/>
-              <Tooltip contentStyle={{ background: "#0c0c0c", border: "1px solid #222", borderRadius: 12, color: "#fff" }} formatter={(v) => fmt(v)}/>
-              <Legend wrapperStyle={{ color: "#888", fontSize: 12 }}/>
-              <Bar dataKey="lent" fill="#3b82f6" radius={[6,6,0,0]} />
-              <Bar dataKey="recovered" fill="#22c55e" radius={[6,6,0,0]} />
-            </BarChart>
-          </ResponsiveContainer>
-        </div>
+        {(s?.monthly_trend || []).some(m => m.lent || m.recovered) ? (
+          <div className="mt-3" style={{ width: "100%", height: 280, minHeight: 280 }}>
+            <ResponsiveContainer>
+              <BarChart data={s?.monthly_trend || []}>
+                <CartesianGrid stroke="#1a1a1a" strokeDasharray="3 3" vertical={false}/>
+                <XAxis dataKey="month" stroke="#666" tickLine={false} axisLine={false}/>
+                <YAxis stroke="#666" tickLine={false} axisLine={false} tickFormatter={(v) => v >= 1000 ? `${v/1000}k` : v}/>
+                <Tooltip contentStyle={{ background: "#0c0c0c", border: "1px solid #222", borderRadius: 12, color: "#fff" }} formatter={(v) => fmt(v)}/>
+                <Legend wrapperStyle={{ color: "#888", fontSize: 12 }}/>
+                <Bar dataKey="lent" fill="#3b82f6" radius={[6,6,0,0]} />
+                <Bar dataKey="recovered" fill="#22c55e" radius={[6,6,0,0]} />
+              </BarChart>
+            </ResponsiveContainer>
+          </div>
+        ) : (
+          <div className="py-10 text-center text-[#666] text-sm">No activity yet</div>
+        )}
       </div>
 
       <div className="card p-6" data-testid="top-borrowers-card">
